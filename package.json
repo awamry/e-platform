@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha ./test/test.js --timeout 10000 --exit",
+    "test": "mocha ./test/**/*.js --timeout 10000 --exit",
     "coverage": "nyc --reporter=lcov --reporter=text-lcov npm test",
     "coveralls": "npm run coverage  && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint \"**/*.js\"",
