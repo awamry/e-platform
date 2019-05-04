@@ -1,0 +1,48 @@
+{
+  "name": "e-platform",
+  "version": "1.0.0",
+  "description": "\"# e-platform\"",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/awamry/e-platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/awamry/e-platform/issues"
+  },
+  "homepage": "https://github.com/awamry/e-platform#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "express": "^4.16.4",
+    "istanbul": "^0.4.5",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.0",
+    "pg": "^7.10.0",
+    "pg-hstore": "^2.3.2",
+    "request": "^2.88.0",
+    "sequelize": "^5.8.4"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.3",
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-node": "^9.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "mocha-lcov-reporter": "^1.3.0",
+    "prettier": "^1.17.0",
+    "prettier-eslint-cli": "^4.7.1"
+  }
+}
