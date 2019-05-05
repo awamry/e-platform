@@ -12,7 +12,9 @@ beforeEach(async () => {
     force: true
   })
 })
-
+after(async () => {
+  await db.sync({ force: true })
+})
 describe('Database', () => {
   it('Connects to the database', async () => {
     try {
