@@ -96,6 +96,119 @@ describe('Routes', () => {
       )
     })
   })
+  describe('POST/validate-game', function () {
+    // eslint-disable-next-line no-undef
+    beforeEach(async () => {
+      await db.sync({
+        force: true
+      })
+      await Users.create({
+        name: 'Omar',
+        email: 'omarelawamry@gmail.com',
+        password: 'awamry'
+      })
+
+      await Games.create({
+        name: 'Name',
+        type: 'True or false',
+        userId: 1
+      })
+      await Questions.create({
+        question: 'My name is omar',
+        answer: 'true',
+        gameId: 1
+      })
+    })
+
+    it('Validates an exisiting game', function (done) {
+      request.post(
+        {
+          headers: { 'content-type': 'application/json' },
+          url: 'http://localhost:3000/games/validate-game',
+          body: `{
+            "gameId": "1",
+            "questions": [
+                {
+                    "question": "My name is omar",
+                    "answer": "true"
+                }
+            ]
+        }`
+        },
+        (error, response, body) => {
+          if (error) throw error
+          assert(JSON.parse(body).result)
+          done()
+        }
+      )
+    })
+
+    it('Invalidates a Game with missing answer', function (done) {
+      request.post(
+        {
+          headers: { 'content-type': 'application/json' },
+          url: 'http://localhost:3000/games/validate-game',
+          body: `
+              {
+                  "gameId": "2",
+                  "questions": [
+                     
+                  ]
+              }`
+        },
+        (error, response, body) => {
+          if (error) throw error
+          assert(!JSON.parse(body).result)
+          done()
+        }
+      )
+    })
+
+    it("Doesn't validates a missing Game ", function (done) {
+      request.post(
+        {
+          headers: { 'content-type': 'application/json' },
+          url: 'http://localhost:3000/games/validate-game',
+          body: `{
+            "gameId": "2",
+            "questions": [
+                {
+                    "question": "My name is omar",
+                    "answer": "false"
+                }
+            ]
+        }`
+        },
+        (error, response, body) => {
+          if (error) throw error
+          assert.strict.equal(JSON.parse(body).statusCode, '-1')
+          done()
+        }
+      )
+    })
+
+    it("Doesn't Accept validate Game Request which has missing parameters", function (done) {
+      request.post(
+        {
+          headers: { 'content-type': 'application/json' },
+          url: 'http://localhost:3000/games/validate-game',
+          body: `{
+            "questions": [
+                {
+                    "question": "My name is omar",
+                    "answer": "false"
+                }
+            ]
+        }`
+        },
+        (error, response, body) => {
+          if (error) throw error
+          assert.strict.equal(JSON.parse(body).statusCode, '2')
+          done()
+        }
+      )
+    })
+  })
 
   after(async () => {
     await db.sync({ force: true })

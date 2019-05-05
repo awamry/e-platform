@@ -4,6 +4,52 @@ const Users = require('../database/models/Users')
 const Questions = require('../database/models/Questions')
 const router = express.Router()
 
+// /games/validate-game => POST
+router.post('/validate-game', async (req, res, next) => {
+  let userReq = req.body
+  // check for parms
+  if (userReq.gameId && userReq.questions.length > 0) {
+    // checking if game exists
+    const game = await Games.findOne({
+      include: [
+        {
+          model: Questions,
+          where: { gameId: userReq.gameId }
+        }
+      ]
+    })
+
+    if (game) {
+      if (userReq.questions.length !== game.questions.length) {
+        res.json({
+          result: false
+        })
+      } else {
+        let result = true
+        userReq.questions.forEach(userQuestion => {
+          game.questions.forEach(gameQuestion => {
+            if (userQuestion.question === gameQuestion.question) {
+              result = result && userQuestion.answer === gameQuestion.answer
+            }
+          })
+        })
+        res.json({
+          result
+        })
+      }
+    } else {
+      res.json({
+        statusCode: '-1'
+      })
+    }
+  } else {
+    res.json({
+      // missing pram code
+      statusCode: '2'
+    })
+  }
+})
+
 // /games/add-game => POST
 router.post('/add-game', async (req, res, next) => {
   // we didn't implment user authentication yet so we will use pass user id as param
