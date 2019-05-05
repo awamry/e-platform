@@ -93,4 +93,37 @@ router.post('/add-game', async (req, res, next) => {
   }
 })
 
+router.put('/update-user', async (req, res, next) => {
+  let newUser = req.body
+
+  if (newUser.name && newUser.email && newUser.password) {
+    const user = await Users.findOne({
+      where: {
+        name: newUser.name
+      }
+    })
+    if (user) {
+      await Users.destroy({
+        where: {
+          name: newUser.name
+        }
+      })
+      newUser = await Users.create({
+        name: newUser.name,
+        email: newUser.email,
+        password: newUser.password
+      })
+      res.json(newUser)
+    } else {
+      res.json({
+        error: '404'
+      })
+    }
+  } else {
+    res.json({
+      error: '442'
+    })
+  }
+})
+
 module.exports = router
