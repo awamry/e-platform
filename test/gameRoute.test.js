@@ -96,7 +96,6 @@ describe('Routes', () => {
       )
     })
   })
-
   describe('POST/validate-game', function () {
     // eslint-disable-next-line no-undef
     beforeEach(async () => {
@@ -210,7 +209,6 @@ describe('Routes', () => {
       )
     })
   })
-
   describe('PUT/ users', function () {
     beforeEach(async () => {
       await db.sync({
@@ -271,6 +269,54 @@ describe('Routes', () => {
           }
 
           assert(JSON.parse(body).error)
+          done()
+        }
+      )
+    })
+  })
+
+  describe('GET/get-game', () => {
+    // eslint-disable-next-line no-undef
+    beforeEach(async () => {
+      await db.sync({
+        force: true
+      })
+
+      let insertedUser = await Users.create({
+        name: 'omar',
+        email: 'awamry@awamry.com',
+        password: 'awamry'
+      })
+
+      let insertedGame = await Games.create({
+        name: 'Game1',
+        type: 'True or False',
+        userId: insertedUser.id
+      })
+      await Questions.create({
+        question: 'My name is omar',
+        answer: 'true',
+        gameId: insertedGame.id
+      })
+    })
+
+    it('Gets an inserted game', function (done) {
+      request.get(
+        'http://localhost:3000/games/get-game/1',
+        (error, response, body) => {
+          if (error) throw error
+          assert.strict.equal(JSON.parse(body).name, 'Game1')
+          done()
+        }
+      )
+    })
+
+    it("Dosen't gets a game with non-existing game id", function (done) {
+      request.get(
+        'http://localhost:3000/games/get-game/2',
+        (error, response, body) => {
+          if (error) throw error
+          assert.strict.equal(JSON.parse(body).error, '-1')
           done()
         }
       )

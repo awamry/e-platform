@@ -126,4 +126,29 @@ router.put('/update-user', async (req, res, next) => {
   }
 })
 
+// /Games/get-game/:id => GET
+router.get('/get-game/:id', async (req, res, next) => {
+  let reqGameId = req.params.id
+
+  const game = await Games.findOne({
+    attributes: ['name', 'type'],
+    include: [
+      {
+        model: Questions,
+        attributes: ['question'],
+        where: { gameId: reqGameId }
+      }
+    ]
+  })
+  // if  game is found
+  if (game) {
+    res.json(game)
+  } else {
+    // if game is not found
+    res.json({
+      error: '-1'
+    })
+  }
+})
+
 module.exports = router
