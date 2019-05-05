@@ -151,4 +151,46 @@ router.get('/get-game/:id', async (req, res, next) => {
   }
 })
 
+router.delete('/delete-game/:id', async (req, res, next) => {
+  await Users.create({
+    name: 'omar',
+    email: 'awamry@awamry.com',
+    password: 'amrex'
+  })
+
+  let reqGameId = req.params.id
+  const game = await Games.findOne({
+    where: {
+      id: reqGameId
+    }
+  })
+
+  if (game) {
+    const questions = await Questions.findAll({
+      where: {
+        gameId: reqGameId
+      }
+    })
+    if (questions) {
+      await Questions.destroy({
+        where: {
+          gameId: reqGameId
+        }
+      })
+      await Games.destroy({
+        where: {
+          id: reqGameId
+        }
+      })
+    }
+    res.json({
+      game
+    })
+  } else {
+    res.json({
+      error: '404'
+    })
+  }
+})
+
 module.exports = router

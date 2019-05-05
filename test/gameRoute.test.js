@@ -323,6 +323,61 @@ describe('Routes', () => {
     })
   })
 
+  describe('DELETE/delete-game', function () {
+    beforeEach(async () => {
+      await db.sync({
+        force: true
+      })
+
+      let insertedUser = await Users.create({
+        name: 'omar',
+        email: 'awamry@awamry.com',
+        password: 'awamry'
+      })
+
+      let insertedGame = await Games.create({
+        name: 'Game1',
+        type: 'True or False',
+        userId: insertedUser.id
+      })
+      await Questions.create({
+        question: 'My name is omar',
+        answer: 'true',
+        gameId: insertedGame.id
+      })
+    })
+    it('deletes an already existing game', function (done) {
+      request.delete(
+        {
+          url: `http://localhost:3000/games/delete-game/1`
+        },
+        function (error, response, body) {
+          if (error) {
+            assert(false)
+          }
+
+          assert.strict.equal(JSON.parse(body).game.name, 'Game1')
+          done()
+        }
+      )
+    })
+    it('checks for non-existing game deletion', function (done) {
+      request.delete(
+        {
+          url: 'http://localhost:3000/games/delete-game/2'
+        },
+        function (error, response, body) {
+          if (error) {
+            throw error
+          }
+
+          assert(JSON.parse(body).error)
+          done()
+        }
+      )
+    })
+  })
+
   after(async () => {
     await db.sync({ force: true })
   })
